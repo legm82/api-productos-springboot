@@ -1,8 +1,15 @@
-FROM eclipse-temurin:17-jdk-alpine
+FROM eclipse-temurin:17-jdk
 
 WORKDIR /app
-COPY target/primerapractica-0.0.1-SNAPSHOT.jar app.jar
+
+# Copia todo el proyecto al contenedor
+COPY . .
+
+# Compila el proyecto usando Maven
+RUN ./mvnw clean package -DskipTests
+
+# Expone el puerto
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
 
-
+# Ejecuta el JAR resultante
+ENTRYPOINT ["java", "-jar", "target/primerapractica-0.0.1-SNAPSHOT.jar"]
