@@ -1,15 +1,23 @@
-FROM eclipse-temurin:17-jdk
+# Etapa 1: Build
+FROM eclipse-temurin:17-jdk as builder
 
 WORKDIR /app
 
-# Copia todo el proyecto al contenedor
 COPY . .
 
-# Compila el proyecto usando Maven
+# Asegura que mvnw tenga permisos
+RUN chmod +x mvnw
+
 RUN ./mvnw clean package -DskipTests
 
-# Expone el puerto
+# Etapa 2: Runtime
+FROM eclipse-temurin:17-jdk-alpine
+
+WORKDIR /app
+
+# Solo copiamos el .jar compilado, nada más
+COPY --from=builder /app/target/primerapractica-0.0.1-SNAPSHOT.jar app.jar
+
 EXPOSE 8080
 
-# Ejecuta el JAR resultante
-ENTRYPOINT ["java", "-jar", "target/primerapractica-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

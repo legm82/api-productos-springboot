@@ -1,0 +1,11 @@
+# Evitar que Docker copie archivos innecesarios
+target/
+.git
+.gitignore
+Dockerfile
+README.md
+*.iml
+.idea/
+*.log
+*.class
+*.jar
